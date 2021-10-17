@@ -53,7 +53,7 @@ func _generate_soil(_map_widht, _map_height) -> void:
 			_cell = offset_to_origin(x,y)
 			soil.set_cellv(
 				_cell,
-				WorldMap.GENERAL_TILESET.GRASS
+				WorldMap.SOIL_TILESET.GRASS
 			)
 			not_forest_cells.append(_cell)
 
@@ -92,11 +92,11 @@ func _get_random_tree() -> int:
 	var result: int
 	
 	if n < 9:
-		result = WorldMap.GENERAL_TILESET.BIG_TREE_YELLOW
-	elif n < 60:
-		result = WorldMap.GENERAL_TILESET.BIG_TREE_DARK
+		result = WorldMap.FOREST_TILESET.F1
+	elif n < 15:
+		result = WorldMap.FOREST_TILESET.F2
 	else:
-		result = WorldMap.GENERAL_TILESET.BIG_TREE_LIGHT
+		result = WorldMap.FOREST_TILESET.F3
 	
 	return result
 
@@ -195,10 +195,13 @@ func set_obstacles(_obstacles) -> void:
 
 
 func _make_path_for_settlements() -> void:
-	var from = settlements.get_used_cells()[1]
-	var to = settlements.get_used_cells()[2]
+#	var from = settlements.get_used_cells()[1]
+#	var to = settlements.get_used_cells()[2]
 	
-	var a = settlements.get_used_cells()
+	var from: Vector2
+	var to: Vector2
+	
+	var a: Array = settlements.get_used_cells()
 	a.resize(2)
 	
 	for s in a:
@@ -206,7 +209,11 @@ func _make_path_for_settlements() -> void:
 			from = s1
 			to = s
 			
-			var path: PoolVector3Array = get_path_from_settlement_to_settlement(from, to)
+			from += Vector2(0, 1)
+			to += Vector2(0, 1)
+			
+			var path: PoolVector3Array
+			path = get_path_from_settlement_to_settlement(from, to)
 			
 			for p in path:
 				var points_i: Array = astar.get_points()
